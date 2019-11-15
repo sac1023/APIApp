@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="msapplication-tap-highlight" content="no" />
+    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width" />
+    <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline'; style-src 'self' 'unsafe-inline'; media-src *" />
+    <link rel="stylesheet" type="text/css" href="css/index.css" />
+    <title>Read and Write</title>
+</head>
+
+<body class="bgimg">
+    
+    <center>
+        <div id="mySidenav" class="sidenav">
+            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+            <a href="index.html">Main Menu</a>
+            <a href="display.html">Display files and folders</a>
+            <a href="readWrite.html">Read and Write a File</a>
+            <a href="pic.html">Take a picture</a>
+            <a href="accel.html">Accelerometer</a>
+        </div>
+    </center>
+    
+    <span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776; Menu</span>
+        
+    
+    
+    <div id="deviceready" >     </div>
+    <div id="filedata"> </div>
+    <br><br><br><br><br><br>
+    <script type="text/javascript" src="cordova.js"></script>
+    <script type="text/javascript" src="js/index.js"></script>
+<br><br><br><br><br><br><br><br><br><br>
+    <button type="button" onclick="readIT()">Read</button>
+    <button type="button" onclick="writeIT()">Write</button>
+    <button type="button" onclick="appendIT()">Append</button>
+
+
+	<script type="text/javascript">
+  
+	document.addEventListener('deviceready', onDeviceReady, false);
+	function onDeviceReady(){
+	  var size =0;
+	  window.requestFileSystem(LocalFileSystem.PERSISTENT, size, onFSsuccess, onFSerror);
+	}
+	function onFSsuccess(FS){
+	   myRoot=FS.root
+	   myRoot.getFile('hello.txt', {create: true, exclusive:false}, function(fileEntry) {setUP(fileEntry, null, true);}, onCreateErr);
+	   alert ("Success for FS"); 
+	}
+	function getItReady(file)
+	{
+	   writeFile(file, null);
+	}
+	function readIT() {
+	   myFile.file(function (file) {
+        var reader = new FileReader();
+        reader.onloadend = function() {
+            document.getElementById("filedata").innerHTML = this.result;
+        };
+        reader.readAsText(file);
+    }, onReadErr);
+	}
+	function setUP(fileEntry, x, isAppend){
+	//setUP the file pointer for later use
+	  myFile=fileEntry;
+	  
+	}
+	function onFSerror(err){
+		alert ("FS Error " + err);
+	}
+	/*function parseData (entries) { //for finding a file in the dir
+		
+		  exists =-1;
+		  for (var i=0, len=entries.length; i< len; i++) {
+			if (entries[i].isFile && "todo.txt".test(entries[i].name)) {
+				exists=i;
+				break;
+			}
+		  }
+		  if (exists == -1) {
+		   alert ("The file isn't created yet");
+		   return;
+		  }
+		  else 
+		   myFile=entries[exists];
+		 
+		 alert ("Myfile is setup for use");
+	}*/
+	function onReadErr (err){
+	   alert ("Read Error " + err);
+	}
+	function onWriteErr (err){
+	   alert ("Write Error " + err);
+	}
+	function onCreateErr (err){
+	   alert ("Create Error " + err);
+	}
+	function appendIT() {
+	  //getfile already called and set up myFile
+	  myFile.createWriter(onGetAppender, onWriteErr);
+	  
+	}
+	function onGetAppender(myAppender) {
+	   //myWriter=writer;
+	   str= prompt("Append something");
+	   myAppender.seek(myAppender.length);
+	   myAppender.write(str);
+
+	}
+        
+    function writeIT() {
+        myFile.createWriter(onGetWriter, onWriteErr);
+        
+    }
+        
+    function onGetWriter(myWriter2){
+        str = prompt("write something");
+        myWriter2.seek(0);
+        myWriter2.write(str);
+    }
+        
+    
+        function openNav() {
+            document.getElementById("mySidenav").style.width = "250px";
+        }
+        
+        function closeNav() {
+            document.getElementById("mySidenav").style.width = "0";
+        }
+    
+    </script>
+</body>
+
+</html>

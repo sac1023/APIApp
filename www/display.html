@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="msapplication-tap-highlight" content="no" />
+    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width" />
+    <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline'; style-src 'self' 'unsafe-inline'; media-src *" />
+
+    <link rel="stylesheet" type="text/css" href="css/index.css" />
+    <title>Display</title>
+</head>
+
+<body class="bgimg">
+
+    <center>
+        <div id="mySidenav" class="sidenav">
+            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+            <a href="index.html">Main Menu</a>
+            <a href="display.html">Display files and folders</a>
+            <a href="readWrite.html">Read and Write a File</a>
+            <a href="pic.html">Take a picture</a>
+            <a href="accel.html">Accelerometer</a>
+        </div>
+    </center>
+    
+    <span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776; Menu</span>
+    
+    <h2>Display Files and Folders</h2>
+
+    <br><br><br><br><br><br><br><br><br><br><br>
+    <script type="text/javascript" src="cordova.js"></script>
+    <script type="text/javascript" src="js/index.js"></script>
+    <script>
+        
+        
+        
+function getOptions() {
+  var x = document.getElementById("pages");
+  if (x.style.display === "block") {
+    x.style.display = "none";
+  } else {
+    x.style.display = "block";
+  }
+}
+</script>
+
+<div id="fileslist"> </div>
+  <script type="text/javascript" src="cordova.js"></script>
+
+    <script type="text/javascript">
+//start of test code
+alert("loading files & directories...");
+document.addEventListener('deviceready', onDeviceReady, false);
+       
+function onDeviceReady()
+{
+ var size =0;
+ window.requestFileSystem(LocalFileSystem.PERSISTENT, size, onFSsuccess, onFSerror);
+}
+
+function onFSsuccess(FS)
+{
+ var Fin = FS.root.createReader();
+ Fin.readEntries(parseDir, onFSerror);
+}
+
+function onFSerror(err)
+{
+ alert ("Error " + err);
+}
+
+function parseDir (entries)
+{
+ var dirs='Directories:<ul>';
+ var files='Files: <ul>';
+ for (var i=0, len=entries.length; i< len; i++)
+ {
+if (entries[i].isDirectory)
+{
+dirs +='<li>' + entries[i].fullPath+ '</li>';
+}
+else
+{
+files +='<li>' + entries[i].fullPath+ '</li>';
+}
+ }
+dirs +='</ul>';
+files +='</ul>';
+document.getElementById("fileslist").innerHTML += dirs + files;
+alert ("!! parse complete !!");
+}
+        
+        
+    
+        
+        function openNav() {
+            document.getElementById("mySidenav").style.width = "250px";
+        }
+        
+        function closeNav() {
+            document.getElementById("mySidenav").style.width = "0";
+        }
+    
+    </script>
+
+</body>
+</html>
